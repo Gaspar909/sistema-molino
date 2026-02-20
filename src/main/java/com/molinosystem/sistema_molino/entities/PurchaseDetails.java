@@ -15,7 +15,7 @@ import lombok.Setter;
 
 @Setter @Getter
 @NoArgsConstructor
-public class purchaseDetails {
+public class PurchaseDetails {
     private Long Id;
     private String type;
 
