@@ -23,7 +23,7 @@ import lombok.Setter;
 public class SuplyUsage {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "suply_id", nullable = false)

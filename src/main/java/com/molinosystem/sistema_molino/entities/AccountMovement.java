@@ -22,7 +22,7 @@ import lombok.Setter;
 public class AccountMovement {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long Id;
+    private Long id;
 
     @ManyToOne
     @JoinColumn(name = "account_id", nullable = false)
@@ -37,6 +37,6 @@ public class AccountMovement {
     private Timestamp createdAt;
 
     @ManyToOne
-    @JoinColumn(name = "account_id", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 }
