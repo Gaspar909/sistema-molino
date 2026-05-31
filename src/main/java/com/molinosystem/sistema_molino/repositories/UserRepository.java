@@ -15,4 +15,6 @@ public interface UserRepository extends JpaRepository<User, Long>, JpaSpecificat
 
     @Query("SELECT DISTINCT u.rol FROM User u")
     List<String>  findAllDistincRoles();
+
+    boolean existsByUserName(String userName);
 }
