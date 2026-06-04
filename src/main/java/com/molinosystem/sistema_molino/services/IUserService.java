@@ -13,7 +13,7 @@ public interface IUserService {
     public UserDto createUser(UserCreateRequest newUserRquest);
     public Page<UserDto> getUsers(int page, int size);
     public UserDto getUserById(Long id);
-    public Page<UserDto> searchUsers(int page, int size, String userName, String name, String rol, Boolean active);
+    public Page<UserDto> searchUsers(int page, int size, String search, String rol, Boolean active);
     public List<String> getRoles();
     public UserDto updateUser(UpdateUserRequest upUser);
     public void changePassword(ChangePasswordRequest reuquest);
