@@ -2,6 +2,7 @@ package com.molinosystem.sistema_molino.services;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.stereotype.Service;
 
 import com.molinosystem.sistema_molino.dtos.AuthResponse;
 import com.molinosystem.sistema_molino.entities.User;
@@ -9,13 +10,15 @@ import com.molinosystem.sistema_molino.exceptions.BadLoginExeption;
 import com.molinosystem.sistema_molino.repositories.UserRepository;
 import com.molinosystem.sistema_molino.requests.AuthRquest;
 
-public class AuthService {
+@Service
+public class AuthService implements IAuthService{
     @Autowired
     private UserRepository userRepository;
 
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Override
     public AuthResponse login(AuthRquest request){
         User user = userRepository.findByUserName(request.getUserName())
         .orElseThrow( () -> new BadLoginExeption("User not exist"));
