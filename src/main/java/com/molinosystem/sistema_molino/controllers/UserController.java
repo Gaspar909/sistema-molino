@@ -28,7 +28,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RestController
 @RequestMapping ("/api/users")
 public class UserController {
-    // QUITAR LOS GIONES BAJOS (NO SON DE JAVA) ej: UserService _userService; PASARLO A UserService userService;
     @Autowired
     private UserService userService;
 
@@ -49,13 +48,11 @@ public class UserController {
     public ResponseEntity<Page<UserDto>> getSearch(
         @RequestParam(defaultValue = "0") int page, 
         @RequestParam(defaultValue = "10") int size, 
-        @RequestParam(required = false) String userName, 
-        @RequestParam(required = false) String name, 
+        @RequestParam(required = false) String search, 
         @RequestParam(required = false) String rol, 
         @RequestParam(required = false) Boolean active
     ) {
-        //Cambiare para haga una busqueda de la concatenacion de nombre y nombre de usuario, el valor se llamara Searhc remplazara el nombre y nombre de usuario
-        return ResponseEntity.ok(userService.searchUsers(page, size, userName, name, rol, active));
+        return ResponseEntity.ok(userService.searchUsers(page, size, search, rol, active));
     }
     
     @GetMapping("/roles")
