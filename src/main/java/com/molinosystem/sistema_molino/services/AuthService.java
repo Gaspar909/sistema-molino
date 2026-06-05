@@ -18,6 +18,9 @@ public class AuthService implements IAuthService{
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private JwtService jwtService;
+
     @Override
     public AuthResponse login(AuthRquest request){
         User user = userRepository.findByUserName(request.getUserName())
@@ -28,7 +31,7 @@ public class AuthService implements IAuthService{
         if (!passwordEncoder.matches(request.getPassword(), user.getPassword()))
             throw new BadLoginExeption("Incorrect password");
 
-        String token = "jalsdjflajeincv";
+        String token = jwtService.generateToken(user.getUserName(), user.getRol());
 
         return AuthResponse.builder()
             .token(token)
