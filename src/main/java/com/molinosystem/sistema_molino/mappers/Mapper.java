@@ -1,5 +1,7 @@
 package com.molinosystem.sistema_molino.mappers;
+import com.molinosystem.sistema_molino.dtos.UnitDto;
 import com.molinosystem.sistema_molino.dtos.UserDto;
+import com.molinosystem.sistema_molino.entities.Unit;
 import com.molinosystem.sistema_molino.entities.User;
 
 
@@ -14,6 +16,19 @@ public class Mapper {
         .userName(u.getUserName())
         .rol(u.getRol())
         .active(u.isActive())
+        .build();
+    }
+
+    public static UnitDto toDTO (Unit u){
+        if (u == null) return null;
+
+        return UnitDto.builder()
+        .id(u.getId())
+        .name(u.getName())
+        .description(u.getDescription())
+        .symbol(u.getSymbol())
+        .ints(u.getInts())
+        .active(u.getActive())
         .build();
     }
 }
