@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.stereotype.Service;
 
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
 import com.molinosystem.sistema_molino.entities.ProductCategory;
@@ -16,6 +17,7 @@ import com.molinosystem.sistema_molino.mappers.Mapper;
 import com.molinosystem.sistema_molino.repositories.ProductCategoryRepository;
 import com.molinosystem.sistema_molino.requests.ProductCategoryRequest;
 
+@Service
 public class ProductCategoryService implements IProductCategoryService {
     @Autowired
     ProductCategoryRepository productCategoryRepository;
@@ -55,6 +57,11 @@ public class ProductCategoryService implements IProductCategoryService {
                 return cb.like(cb.lower(concatExpression), "%" + search.toLowerCase() + "%");
             });
         }
+
+        if (active != null) specification = specification.and((root, query, cb) -> 
+            cb.equal(root.get("active"), active)
+        );
+
         Pageable pageable = PageRequest.of(page, pageSize);
         Page<ProductCategory> result = productCategoryRepository.findAll(specification, pageable);
 
