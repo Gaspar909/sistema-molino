@@ -1,8 +1,10 @@
 package com.molinosystem.sistema_molino.mappers;
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
+import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
 import com.molinosystem.sistema_molino.dtos.UnitDto;
 import com.molinosystem.sistema_molino.dtos.UserDto;
 import com.molinosystem.sistema_molino.entities.ProductCategory;
+import com.molinosystem.sistema_molino.entities.ProductPrice;
 import com.molinosystem.sistema_molino.entities.Unit;
 import com.molinosystem.sistema_molino.entities.User;
 
@@ -41,6 +43,18 @@ public class Mapper {
         .id(p.getId())
         .name(p.getName())
         .description(p.getDescription())
+        .active(p.getActive())
+        .build();
+    }
+
+    public static ProductPriceDto toDTO(ProductPrice p){
+        if (p== null) return null;
+
+        return ProductPriceDto.builder()
+        .id(p.getId())
+        .productId(p.getProduct().getId())
+        .name(p.getName())
+        .price(p.getPrice())
         .active(p.getActive())
         .build();
     }
