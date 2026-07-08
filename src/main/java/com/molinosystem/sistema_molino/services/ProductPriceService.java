@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
 import com.molinosystem.sistema_molino.entities.ProductPrice;
@@ -13,6 +14,7 @@ import com.molinosystem.sistema_molino.mappers.Mapper;
 import com.molinosystem.sistema_molino.repositories.ProductPriceRepository;
 import com.molinosystem.sistema_molino.requests.ProductPriceRequest;
 
+@Service
 public class ProductPriceService implements IProductPriceService{
 
     @Autowired
