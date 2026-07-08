@@ -32,4 +32,6 @@ public class ProductPrice {
     private String name;
 
     private double price;
+
+    private Boolean active;
 }
