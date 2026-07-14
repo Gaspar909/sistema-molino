@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import com.molinosystem.sistema_molino.entities.Product;
 
 public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
-
+    public Boolean existsByBarCode(String barCode);
 }

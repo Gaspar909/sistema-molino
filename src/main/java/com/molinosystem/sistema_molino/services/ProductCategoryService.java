@@ -1,8 +1,8 @@
 package com.molinosystem.sistema_molino.services;
 
 import jakarta.persistence.criteria.Expression;
+import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +18,10 @@ import com.molinosystem.sistema_molino.repositories.ProductCategoryRepository;
 import com.molinosystem.sistema_molino.requests.ProductCategoryRequest;
 
 @Service
+@RequiredArgsConstructor
 public class ProductCategoryService implements IProductCategoryService {
-    @Autowired
-    ProductCategoryRepository productCategoryRepository;
+    
+    private final ProductCategoryRepository productCategoryRepository;
 
     @Override
     public ProductCategoryDto createProductCategory(ProductCategoryRequest newProductCategory) {
@@ -50,7 +51,7 @@ public class ProductCategoryService implements IProductCategoryService {
 
     @Override
     public Page<ProductCategoryDto> searchProductCategory(int page, int pageSize, String search, Boolean active) {
-        Specification specification = Specification.where((roos, query, cb) -> cb.conjunction());
+        Specification<ProductCategory> specification = Specification.where((roos, query, cb) -> cb.conjunction());
         if(search != null && !search.isEmpty()){
             specification = specification.and((root, query, cb) -> {
                 Expression<String> concatExpression = cb.concat(cb.concat(root.get("name"), " "), root.get("description"));

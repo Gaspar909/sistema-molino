@@ -1,6 +1,5 @@
 package com.molinosystem.sistema_molino.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -19,24 +18,29 @@ import com.molinosystem.sistema_molino.requests.ProductRequest;
 import com.molinosystem.sistema_molino.requests.ProductSearchRequest;
 
 import jakarta.persistence.criteria.Expression;
+import lombok.RequiredArgsConstructor;
 
 @Service
+@RequiredArgsConstructor
 public class ProductService implements IProductService {
 
-    @Autowired
-    ProductRepository productRepository;
+    
+    private final ProductRepository productRepository;
 
-    @Autowired
-    UnitService unitService;
+    
+    private final UnitService unitService;
 
-    @Autowired 
-    ProductCategoryService productCategoryService;
+    
+    private final ProductCategoryService productCategoryService;
 
     @Override
     public ProductDto createProduct(ProductRequest productRequest) {
 
         UnitDto unitTmp = unitService.getUnitById(productRequest.getUnitId());
         ProductCategoryDto productCategoryTmp = productCategoryService.getProductCategoryById(productRequest.getCategoryId());
+        
+        if(productRepository.existsByBarCode(productRequest.getBarcode()))
+            throw new BadRequestException("This Barcode is alresdy exist");
 
         Product newProduct = Product.builder()
         .id(null)
@@ -44,13 +48,12 @@ public class ProductService implements IProductService {
         .name(productRequest.getName())
         .description(productRequest.getDescripotion())
         .stock( productRequest.getStock() != null || productRequest.getStock() < 0 ? productRequest.getStock() : 0 )
-        .unit(null) 
+        .unit(Mapper.toEntity(unitTmp))
+        .category(Mapper.toEntity(productCategoryTmp))
         .active(true)
         .build();
         
-        //return Mapper.toDTO(productRepository.save(newProduct));
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'createProduct'");
+        return Mapper.toDTO(productRepository.save(newProduct));
     }
 
     @Override
@@ -59,9 +62,7 @@ public class ProductService implements IProductService {
 
         Page<Product> result = productRepository.findAll(pageable);
 
-        //return result.map(Mapper::toDTO);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'getAllProducts'");
+        return result.map(Mapper::toDTO);
     }
 
     @Override
@@ -101,9 +102,8 @@ public class ProductService implements IProductService {
         Pageable pageable = PageRequest.of(searchRequest.getPage(), searchRequest.getPageSize());
 
         Page<Product> result = productRepository.findAll(specification, pageable);
-        //return result.map(Mapper::toDTO);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchProduct'");
+
+        return result.map(Mapper::toDTO);
     }
 
     @Override
@@ -111,8 +111,16 @@ public class ProductService implements IProductService {
         Product product = productRepository.findById(id).
         orElseThrow( () -> new NoFoundException("product is not exist"));
 
-        //return Mapper.toDTO(product )
-        throw new UnsupportedOperationException("Unimplemented method 'searchProduct'");
+        return Mapper.toDTO(product);
+    }
+
+    
+    @Override
+    public Product getProductEntityById(Long id) {
+        Product product = productRepository.findById(id).
+        orElseThrow( () -> new NoFoundException("product is not exist"));
+
+        return product;
     }
 
     @Override
@@ -125,9 +133,7 @@ public class ProductService implements IProductService {
         product.setDescription(productRquest.getDescripotion());
         product.setStock(productRquest.getStock());
 
-        productRepository.save(product);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'updateProduct'");
+        return Mapper.toDTO(productRepository.save(product));
     }
 
     @Override
@@ -139,9 +145,7 @@ public class ProductService implements IProductService {
         
         product.setActive(true);
 
-        productRepository.save(product);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'enableProduct'");
+        return Mapper.toDTO(productRepository.save(product));
     }
 
     @Override
@@ -153,9 +157,7 @@ public class ProductService implements IProductService {
         
         product.setActive(false);
 
-        productRepository.save(product);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'disableProduct'");
+        return Mapper.toDTO(productRepository.save(product));
     }
 
     @Override
@@ -164,8 +166,7 @@ public class ProductService implements IProductService {
         orElseThrow( () -> new NoFoundException("product is not exist"));
 
         productRepository.delete(product);
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'deleteProduct'");
+        return Mapper.toDTO(product);
     }
 
 }
