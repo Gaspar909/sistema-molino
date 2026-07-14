@@ -1,8 +1,8 @@
 package com.molinosystem.sistema_molino.services;
 
 import jakarta.persistence.criteria.Expression;
+import lombok.RequiredArgsConstructor;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -18,9 +18,10 @@ import com.molinosystem.sistema_molino.repositories.UnitRepository;
 import com.molinosystem.sistema_molino.requests.UnitRequest;
 
 @Service
+@RequiredArgsConstructor
 public class UnitService implements IUnitService {
-    @Autowired
-    private UnitRepository unitRepository;
+
+    private final UnitRepository unitRepository;
 
     @Override
     public UnitDto createUnitDto(UnitRequest newUnitRequest) {

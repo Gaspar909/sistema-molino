@@ -1,6 +1,5 @@
 package com.molinosystem.sistema_molino.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
 import com.molinosystem.sistema_molino.requests.ProductCategoryRequest;
 import com.molinosystem.sistema_molino.services.ProductCategoryService;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,10 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("api/product-category")
+@RequiredArgsConstructor
 public class ProductCategoryController {
 
-    @Autowired
-    ProductCategoryService productCategoryService;
+    private final ProductCategoryService productCategoryService;
 
     @GetMapping
     public ResponseEntity<Page<ProductCategoryDto>> getProductCategory(
