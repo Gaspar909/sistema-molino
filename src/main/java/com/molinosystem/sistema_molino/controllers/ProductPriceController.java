@@ -1,6 +1,5 @@
 package com.molinosystem.sistema_molino.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
 import com.molinosystem.sistema_molino.requests.ProductPriceRequest;
 import com.molinosystem.sistema_molino.services.ProductPriceService;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,10 +24,10 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("/api/product-price")
+@RequiredArgsConstructor
 public class ProductPriceController {
 
-    @Autowired
-    ProductPriceService productPriceService;
+    private final ProductPriceService productPriceService;
 
     @GetMapping("")
     public ResponseEntity<Page<ProductPriceDto>> getProductPriceByProductId(

@@ -1,6 +1,5 @@
 package com.molinosystem.sistema_molino.controllers;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,6 +8,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.molinosystem.sistema_molino.dtos.UnitDto;
 import com.molinosystem.sistema_molino.requests.UnitRequest;
 import com.molinosystem.sistema_molino.services.UnitService;
+
+import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -23,9 +24,9 @@ import org.springframework.web.bind.annotation.PutMapping;
 
 @RestController
 @RequestMapping("/api/unit")
+@RequiredArgsConstructor
 public class UnitController {
-    @Autowired
-    private UnitService unitService;
+    private final UnitService unitService;
 
     @GetMapping
     public ResponseEntity<Page<UnitDto>> getUnits(

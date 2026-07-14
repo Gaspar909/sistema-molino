@@ -2,7 +2,6 @@ package com.molinosystem.sistema_molino.controllers;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +15,8 @@ import com.molinosystem.sistema_molino.requests.UpdateUserRequest;
 import com.molinosystem.sistema_molino.requests.UserCreateRequest;
 import com.molinosystem.sistema_molino.services.UserService;
 
+import lombok.RequiredArgsConstructor;
+
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,9 +28,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping ("/api/users")
+@RequiredArgsConstructor
 public class UserController {
-    @Autowired
-    private UserService userService;
+    private final UserService userService;
 
     @GetMapping
     public ResponseEntity<Page<UserDto>> getAllUsers( 

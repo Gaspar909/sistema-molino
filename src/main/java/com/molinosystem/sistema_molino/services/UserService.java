@@ -1,9 +1,10 @@
 package com.molinosystem.sistema_molino.services;
 
 import jakarta.persistence.criteria.Expression;
+import lombok.RequiredArgsConstructor;
+
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -22,13 +23,12 @@ import com.molinosystem.sistema_molino.requests.UpdateUserRequest;
 import com.molinosystem.sistema_molino.requests.UserCreateRequest;
 
 @Service
+@RequiredArgsConstructor
 public class UserService implements IUserService {
 
-    @Autowired 
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Override
     public UserDto createUser(UserCreateRequest newUserRquest) {
@@ -36,14 +36,17 @@ public class UserService implements IUserService {
             throw new BadRequestException("This username is already in use");
 
         String passEncripted = passwordEncoder.encode(newUserRquest.getPassword());
-        User newUser = new User(null, 
-            newUserRquest.getName(), 
-            newUserRquest.getUserName(), 
-            passEncripted, 
-            newUserRquest.getRol(), 
-            true);
 
-            return  Mapper.toDTO(userRepository.save(newUser));
+        User newUser = User.builder()
+        .id(null)
+        .name(newUserRquest.getName())
+        .userName(newUserRquest.getUserName())
+        .password(passEncripted)
+        .rol(newUserRquest.getRol())
+        .active(true)
+        .build();
+
+        return  Mapper.toDTO(userRepository.save(newUser));
     }
 
     @Override

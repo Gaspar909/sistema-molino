@@ -1,6 +1,5 @@
 package com.molinosystem.sistema_molino.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -10,16 +9,16 @@ import com.molinosystem.sistema_molino.exceptions.BadLoginExeption;
 import com.molinosystem.sistema_molino.repositories.UserRepository;
 import com.molinosystem.sistema_molino.requests.AuthRquest;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class AuthService implements IAuthService{
-    @Autowired
-    private UserRepository userRepository;
+    private final UserRepository userRepository;
 
-    @Autowired
-    private BCryptPasswordEncoder passwordEncoder;
+    private final BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    private JwtService jwtService;
+    private final JwtService jwtService;
 
     @Override
     public AuthResponse login(AuthRquest request){
