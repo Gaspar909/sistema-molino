@@ -36,14 +36,17 @@ public class UserService implements IUserService {
             throw new BadRequestException("This username is already in use");
 
         String passEncripted = passwordEncoder.encode(newUserRquest.getPassword());
-        User newUser = new User(null, 
-            newUserRquest.getName(), 
-            newUserRquest.getUserName(), 
-            passEncripted, 
-            newUserRquest.getRol(), 
-            true);
 
-            return  Mapper.toDTO(userRepository.save(newUser));
+        User newUser = User.builder()
+        .id(null)
+        .name(newUserRquest.getName())
+        .userName(newUserRquest.getUserName())
+        .password(passEncripted)
+        .rol(newUserRquest.getRol())
+        .active(true)
+        .build();
+
+        return  Mapper.toDTO(userRepository.save(newUser));
     }
 
     @Override
