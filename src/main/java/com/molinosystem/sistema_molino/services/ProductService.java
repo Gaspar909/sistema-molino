@@ -1,6 +1,5 @@
 package com.molinosystem.sistema_molino.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,6 +38,9 @@ public class ProductService implements IProductService {
 
         UnitDto unitTmp = unitService.getUnitById(productRequest.getUnitId());
         ProductCategoryDto productCategoryTmp = productCategoryService.getProductCategoryById(productRequest.getCategoryId());
+        
+        if(productRepository.existsByBarCode(productRequest.getBarcode()))
+            throw new BadRequestException("This Barcode is alresdy exist");
 
         Product newProduct = Product.builder()
         .id(null)
