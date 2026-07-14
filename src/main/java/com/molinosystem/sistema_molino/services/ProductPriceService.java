@@ -1,6 +1,5 @@
 package com.molinosystem.sistema_molino.services;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -14,17 +13,21 @@ import com.molinosystem.sistema_molino.mappers.Mapper;
 import com.molinosystem.sistema_molino.repositories.ProductPriceRepository;
 import com.molinosystem.sistema_molino.requests.ProductPriceRequest;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
+@RequiredArgsConstructor
 public class ProductPriceService implements IProductPriceService{
 
-    @Autowired
-    ProductPriceRepository productPriceRepository;
+    private final ProductPriceRepository productPriceRepository;
+
+    private final ProductService productService;
 
     @Override
     public ProductPriceDto createProductPrice(ProductPriceRequest newProductPriceRequest) {
         ProductPrice newProductPrice = ProductPrice.builder()
         .id(null)
-        .product(null)
+        .product(productService.getProductEntityById(newProductPriceRequest.getProductId()))
         .name(newProductPriceRequest.getName())
         .price(newProductPriceRequest.getPrice())
         .active(newProductPriceRequest.getActive())
