@@ -1,5 +1,7 @@
 package com.molinosystem.sistema_molino.dtos;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,7 +19,7 @@ public class ProductPriceDto {
     
     private String name;
     
-    private double price;
+    private BigDecimal price;
     
     private Boolean active;
 }

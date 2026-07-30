@@ -1,5 +1,7 @@
 package com.molinosystem.sistema_molino.entities;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -31,7 +33,7 @@ public class ProductPrice {
     
     private String name;
 
-    private double price;
+    private BigDecimal price;
 
     private Boolean active;
 }
