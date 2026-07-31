@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,12 +29,14 @@ public class SaleController {
     private final SaleService saleService;
 
     @GetMapping("")
-    public ResponseEntity<Page<SaleDto>> getSale(@RequestParam int page, int pageSize) {
+    public ResponseEntity<Page<SaleDto>> getSale(
+        @RequestParam(defaultValue = "0") int page, 
+        @RequestParam(defaultValue = "10") int pageSize) {
         return ResponseEntity.ok(saleService.getAllSales(page, pageSize));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<SaleCompleteDto> getSaleComplete(@RequestParam Long id) {
+    public ResponseEntity<SaleCompleteDto> getSaleComplete(@PathVariable Long id) {
         return ResponseEntity.ok(saleService.getSaleComplete(id));
     }
     
@@ -43,12 +46,12 @@ public class SaleController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<SaleCompleteDto> updateSale(@RequestParam Long id, @RequestBody SaleRequest upSale) {
+    public ResponseEntity<SaleCompleteDto> updateSale(@PathVariable Long id, @RequestBody SaleRequest upSale) {
         return ResponseEntity.ok(saleService.updateSale(id, upSale));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<SaleDto> deleteSale(@RequestParam Long id){
+    public ResponseEntity<SaleDto> deleteSale(@PathVariable Long id){
         return ResponseEntity.ok(saleService.deleteSale(id));
     }
 }
