@@ -8,18 +8,24 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Setter @Getter
-public class ProductPriceDto {
+@Getter @Setter
+@Builder
+public class SaleDetailDto {
     private Long id;
 
+    private Long saleId;
+
     private Long productId;
-    
-    private String name;
-    
+
+    private String productName;
+
+    private String productBarcode;
+
+    private BigDecimal quantity;
+
     private BigDecimal price;
-    
-    private Boolean active;
+
+    private BigDecimal totalPrice;
 }

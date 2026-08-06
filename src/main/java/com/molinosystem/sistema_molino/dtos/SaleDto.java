@@ -1,6 +1,7 @@
 package com.molinosystem.sistema_molino.dtos;
 
 import java.math.BigDecimal;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,18 +9,17 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Setter @Getter
-public class ProductPriceDto {
+@Builder
+public class SaleDto {
     private Long id;
-
-    private Long productId;
-    
-    private String name;
-    
-    private BigDecimal price;
-    
-    private Boolean active;
+    private String folio;
+    private Timestamp dateTime;
+    private BigDecimal total;
+    private Long clientId;
+    private String clientName;
+    private Long userId;
+    private String userName;
 }

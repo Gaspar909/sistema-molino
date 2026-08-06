@@ -8,13 +8,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Builder
-@NoArgsConstructor
 @AllArgsConstructor
-@Setter @Getter
-public class ProductPriceRequest {
+@NoArgsConstructor
+@Setter  @Getter
+@Builder
+public class SaleDetailRequest {
+    private Long idSale;
     private Long productId;
-    private String name;
-    private BigDecimal price;
-    private Boolean active;
+    private Long priceId;
+    private BigDecimal quantity;
 }

@@ -1,13 +1,21 @@
 package com.molinosystem.sistema_molino.mappers;
 
+import java.util.List;
+import java.util.stream.Collectors;
+
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
 import com.molinosystem.sistema_molino.dtos.ProductDto;
 import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
+import com.molinosystem.sistema_molino.dtos.SaleCompleteDto;
+import com.molinosystem.sistema_molino.dtos.SaleDetailDto;
+import com.molinosystem.sistema_molino.dtos.SaleDto;
 import com.molinosystem.sistema_molino.dtos.UnitDto;
 import com.molinosystem.sistema_molino.dtos.UserDto;
 import com.molinosystem.sistema_molino.entities.Product;
 import com.molinosystem.sistema_molino.entities.ProductCategory;
 import com.molinosystem.sistema_molino.entities.ProductPrice;
+import com.molinosystem.sistema_molino.entities.Sale;
+import com.molinosystem.sistema_molino.entities.SaleDetail;
 import com.molinosystem.sistema_molino.entities.Unit;
 import com.molinosystem.sistema_molino.entities.User;
 
@@ -79,6 +87,58 @@ public class Mapper {
         
         .categoryId(p.getCategory() != null ? p.getCategory().getId() : null)
         .categoryName(p.getCategory() != null ? p.getCategory().getName() : null)
+        .build();
+    }
+
+    public static SaleDetailDto toDTO(SaleDetail s){
+        if (s == null) return null;
+        
+        return SaleDetailDto.builder()
+        .id(s.getId())
+        .saleId(s.getSale().getId())
+        .productId(s.getProduct().getId())
+        .productName(s.getProduct().getName())
+        .productBarcode(s.getProduct().getBarCode())
+        .quantity(s.getQuantity())
+        .price(s.getPrice())
+        .totalPrice(s.getTotalPrice())
+        .build();
+    }
+
+    public static SaleDto toDTO(Sale s){
+        if (s == null) return null;
+
+        return SaleDto.builder()
+        .id(s.getId())
+        .folio(s.getFolio())
+        .dateTime(s.getDateTime())
+        .total(s.getTotal())
+        .clientId(s.getClient() != null ? s.getClient().getId() : null)
+        .clientName(s.getClient() != null ? s.getClient().getName() : null)
+        .userId(s.getUser() != null ? s.getUser().getId() : null)
+        .userName(s.getUser() != null ? s.getUser().getUserName() : null )
+        .build();
+    }
+
+    public static SaleCompleteDto toCompleteDto(Sale s){
+        if (s == null) return null;
+
+        List<SaleDetailDto> details = null;
+        if (s.getDetails() != null) {
+            details = s.getDetails().stream().map(Mapper::toDTO)
+            .collect(Collectors.toList());
+        }
+        
+        return SaleCompleteDto.builder()
+        .id(s.getId())
+        .folio(s.getFolio())
+        .dateTime(s.getDateTime())
+        .total(s.getTotal())
+        .clientId(s.getClient() != null ? s.getClient().getId(): null)
+        .clientName(s.getClient() != null ? s.getClient().getName() : null)
+        .userId(s.getUser() != null ? s.getUser().getId() : null)
+        .userName(s.getUser() != null ? s.getUser().getName() : null)
+        .saleDetail(details)
         .build();
     }
 
