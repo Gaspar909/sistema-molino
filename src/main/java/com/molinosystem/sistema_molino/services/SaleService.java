@@ -1,6 +1,7 @@
 package com.molinosystem.sistema_molino.services;
 
 import java.math.BigDecimal;
+import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -180,15 +181,21 @@ public class SaleService implements ISaleService {
         return Mapper.toDTO(sale);
     }
 
+    
+    private static final String ALPHANUMERIC = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    private static final SecureRandom RANDOM = new SecureRandom();
+
     private String generateFolio(){
         String datePart = LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyyMMdd"));
+
+        String homoclave = generateHomoclave(2);
         Long lastId = saleRepository.findTopByOrderByIdDesc()
-        .map(Sale::getId)
+        .map(sale -> sale.getId())
         .orElse(0L);
 
         Long numberPart = lastId + 1;
 
-        return String.format("VTA-%s-%04X", datePart, numberPart);
+        return String.format("VTA-%s-%04X-%s", datePart, numberPart, homoclave);
     }
 
     private User getCurrentUser(){
@@ -201,5 +208,14 @@ public class SaleService implements ISaleService {
         String username = authentication.getName();
         return userRepository.findByUserName(username)
                 .orElseThrow(() -> new RuntimeException("User no found: " + username));
+    }
+
+    private String generateHomoclave(int length){
+        StringBuilder sb = new StringBuilder(length);
+        for (int i=0; i<length ; i++){
+            int index = RANDOM.nextInt(ALPHANUMERIC.length());
+            sb.append(ALPHANUMERIC.charAt(index));
         }
+        return sb.toString();
+    }
 }
