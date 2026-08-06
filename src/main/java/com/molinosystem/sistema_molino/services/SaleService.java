@@ -16,9 +16,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.molinosystem.sistema_molino.dtos.SaleCompleteDto;
 import com.molinosystem.sistema_molino.dtos.SaleDto;
+import com.molinosystem.sistema_molino.entities.Product;
 import com.molinosystem.sistema_molino.entities.Sale;
 import com.molinosystem.sistema_molino.entities.SaleDetail;
 import com.molinosystem.sistema_molino.entities.User;
+import com.molinosystem.sistema_molino.exceptions.BadRequestException;
 import com.molinosystem.sistema_molino.exceptions.NoFoundException;
 import com.molinosystem.sistema_molino.mappers.Mapper;
 import com.molinosystem.sistema_molino.repositories.SaleRepository;
@@ -54,15 +56,32 @@ public class SaleService implements ISaleService {
         for (SaleDetailRequest sd : saleRequest.getSaleDetail()){
             if (sd != null){
                 BigDecimal price = preoductPriceService.getProductPriceById(sd.getPriceId()).getPrice();
+
+                Product product = productService.getProductEntityById(sd.getProductId());
+                if (sd.getQuantity().compareTo(BigDecimal.valueOf(product.getStock())) > 0) 
+                    throw new BadRequestException(
+                        "Insufficient stock for " + product.getName() + ": available " 
+                        + product.getStock() + ", requested " + sd.getQuantity()
+                    );
+
                 SaleDetail newDetail = SaleDetail.builder()
                 .id(null)
                 .sale(null)
-                .product(productService.getProductEntityById(sd.getProductId()))
+                .product(product)
                 .quantity(sd.getQuantity())
                 .price(price)
                 .totalPrice(price.multiply(sd.getQuantity()))
                 .build();
+
                 newSale.addDetail(newDetail);
+                
+                double newStock = BigDecimal.valueOf(product.getStock())
+                    .subtract(sd.getQuantity())
+                    .doubleValue();
+
+                product.setStock(newStock);
+                //productService.updateProduct(product); <- NO HACE FALTA: @Transactional lo guarda automaticamente
+
                 total = total.add(newDetail.getTotalPrice());
             }
         }
@@ -175,6 +194,19 @@ public class SaleService implements ISaleService {
     public SaleDto deleteSale(Long id) {
         Sale sale = saleRepository.findById(id)
         .orElseThrow( () -> new NoFoundException("Sale does not exist"));
+
+        if(sale.getDetails() != null){
+            for(SaleDetail saleDetail : sale.getDetails()){
+                if (saleDetail != null) {
+                    Product product = saleDetail.getProduct();
+                    double restoreStock = BigDecimal.valueOf(product.getStock())
+                    .add(saleDetail.getQuantity())
+                    .doubleValue();
+
+                    product.setStock(restoreStock);
+                }
+            }
+        }
         
         saleRepository.delete(sale);
 
