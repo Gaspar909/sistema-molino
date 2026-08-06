@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import com.molinosystem.sistema_molino.dtos.SaleCompleteDto;
 import com.molinosystem.sistema_molino.dtos.SaleDto;
 import com.molinosystem.sistema_molino.requests.SaleRequest;
+import com.molinosystem.sistema_molino.requests.SaleSearchRequest;
 import com.molinosystem.sistema_molino.services.SaleService;
 
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,15 @@ public class SaleController {
     public ResponseEntity<SaleCompleteDto> getSaleComplete(@PathVariable Long id) {
         return ResponseEntity.ok(saleService.getSaleComplete(id));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<SaleDto>> searchSale(
+        @RequestParam(defaultValue = "0") int page, 
+        @RequestParam(defaultValue = "10") int pageSize,
+        @RequestBody SaleSearchRequest search) {
+        return ResponseEntity.ok(saleService.searchSales(page, pageSize, search));
+    }
+    
     
     @PostMapping("")
     public ResponseEntity<SaleDto> createSale(@RequestBody SaleRequest newSale) {

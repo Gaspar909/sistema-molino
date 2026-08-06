@@ -7,6 +7,7 @@ import java.time.format.DateTimeFormatter;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,7 @@ import com.molinosystem.sistema_molino.repositories.SaleRepository;
 import com.molinosystem.sistema_molino.repositories.UserRepository;
 import com.molinosystem.sistema_molino.requests.SaleDetailRequest;
 import com.molinosystem.sistema_molino.requests.SaleRequest;
+import com.molinosystem.sistema_molino.requests.SaleSearchRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -78,11 +80,53 @@ public class SaleService implements ISaleService {
 
         return result.map(Mapper::toDTO);
     }
+    
     @Override
-    public Page<SaleDto> searchSales(int page, int pageSize) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchSales'");
+    public Page<SaleDto> searchSales(int page, int pageSize, SaleSearchRequest search) {
+        Specification<Sale> specification = Specification.where((root, query, cb) -> cb.conjunction());
+
+        if(search.getFolio() != null && !search.getFolio().isEmpty()){
+            specification = specification.and(
+                (root, query, cb) -> 
+                cb.like(cb.lower(root.get("folio")), "%" + search.getFolio() + "%")
+            );
+        }
+
+        if (search.getStartDate() != null) {
+            specification = specification.and(
+                (root, query, cb) -> 
+                cb.greaterThanOrEqualTo(root.get("dateTime"), search.getStartDate())
+            );
+        }
+
+        if (search.getEndDate() != null){
+            specification = specification.and(
+                (root, query, cb) -> 
+                cb.lessThanOrEqualTo(root.get("dateTime"), search.getEndDate())
+            );
+        }
+
+        if(search.getClientId() != null){
+            specification = specification.and(
+                (root, query, cb) -> 
+                cb.equal(root.get("client").get("id"), search.getClientId())
+            );
+        }
+
+        if (search.getUserId() != null) {
+            specification = specification.and((
+                root, query, cb) ->
+                cb.equal(root.get("user").get("id"), search.getUserId())
+            );
+        }
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+        
+        Page<Sale> result = saleRepository.findAll(specification, pageable);
+
+        return result.map(Mapper::toDTO);
     }
+
     @Override
     @Transactional (readOnly = true)
     public SaleCompleteDto getSaleComplete(Long id) {
