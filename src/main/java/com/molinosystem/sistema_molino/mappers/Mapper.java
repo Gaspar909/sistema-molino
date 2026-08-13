@@ -10,6 +10,7 @@ import com.molinosystem.sistema_molino.dtos.SaleCompleteDto;
 import com.molinosystem.sistema_molino.dtos.SaleDetailDto;
 import com.molinosystem.sistema_molino.dtos.SaleDto;
 import com.molinosystem.sistema_molino.dtos.SuplyDto;
+import com.molinosystem.sistema_molino.dtos.SuplyUsageDto;
 import com.molinosystem.sistema_molino.dtos.UnitDto;
 import com.molinosystem.sistema_molino.dtos.UserDto;
 import com.molinosystem.sistema_molino.entities.Product;
@@ -18,6 +19,7 @@ import com.molinosystem.sistema_molino.entities.ProductPrice;
 import com.molinosystem.sistema_molino.entities.Sale;
 import com.molinosystem.sistema_molino.entities.SaleDetail;
 import com.molinosystem.sistema_molino.entities.Suply;
+import com.molinosystem.sistema_molino.entities.SuplyUsage;
 import com.molinosystem.sistema_molino.entities.Unit;
 import com.molinosystem.sistema_molino.entities.User;
 
@@ -154,6 +156,17 @@ public class Mapper {
         .stock(s.getStock())
         .price(s.getPrice())
         .active(s.getActive())
+        .build();
+    }
+
+    public static SuplyUsageDto toDTO(SuplyUsage s){
+        if(s == null) return null;
+
+        return SuplyUsageDto.builder()
+        .id(s.getId())
+        .suplyId(s.getSuply().getId())
+        .amount(s.getAmount())
+        .dateTime(s.getDateTime())
         .build();
     }
 
