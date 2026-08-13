@@ -119,6 +119,14 @@ public class SuplyUsageService implements ISuplyUsageService{
     public SuplyUsageDto deleteSuplyUsage(Long id) {
         SuplyUsage suplyUsage = suplyUsageRepository.findById(id).orElseThrow(() -> new NoFoundException("Suply Usage does not exist"));
 
+        Suply suply = suplyUsage.getSuply();
+
+        if(suplyUsage.getAmount() != null){
+            BigDecimal newStock = suply.getStock().add(suplyUsage.getAmount());
+
+            suply.setStock(newStock);
+        }
+
         suplyUsageRepository.delete(suplyUsage);
 
         return Mapper.toDTO(suplyUsage);
