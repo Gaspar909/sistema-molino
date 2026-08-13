@@ -3,6 +3,7 @@ package com.molinosystem.sistema_molino.services;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.molinosystem.sistema_molino.dtos.SuplyDto;
@@ -12,7 +13,9 @@ import com.molinosystem.sistema_molino.exceptions.NoFoundException;
 import com.molinosystem.sistema_molino.mappers.Mapper;
 import com.molinosystem.sistema_molino.repositories.SuplyRepository;
 import com.molinosystem.sistema_molino.requests.SuplyRequest;
+import com.molinosystem.sistema_molino.requests.SuplySearchRequest;
 
+import jakarta.persistence.criteria.Expression;
 import lombok.RequiredArgsConstructor;
 
 @RequiredArgsConstructor
@@ -44,9 +47,29 @@ public class SuplyService implements ISuplyService{
     }
 
     @Override
-    public Page<SuplyDto> searchSuplies(int page, int pageSize, String name) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'searchSuplies'");
+    public Page<SuplyDto> searchSuplies(int page, int pageSize, SuplySearchRequest search) {
+        Specification<Suply> specification = Specification.where((root, query, cb) -> cb.conjunction());
+
+        if (search.getSearch() != null && !search.getSearch().isEmpty()) {
+            specification = specification.and((root, query, cb) -> {
+                Expression<String> expression = 
+                cb.concat(cb.concat(root.get("name"), " "), root.get("description"));
+
+                return cb.like(cb.lower(expression), "%" + search.getSearch().toLowerCase() + "%");
+            }
+        );
+        }
+
+        if (search.getActive() != null) {
+            specification = specification.and((root, query, cb) -> 
+                cb.equal(root.get("active"), search.getActive()));
+        }
+
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<Suply> result = suplyRepository.findAll(specification, pageable);
+
+        return result.map(Mapper::toDTO);
     }
 
     @Override

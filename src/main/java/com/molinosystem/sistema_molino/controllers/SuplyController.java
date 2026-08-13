@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.molinosystem.sistema_molino.dtos.SuplyDto;
 import com.molinosystem.sistema_molino.requests.SuplyRequest;
+import com.molinosystem.sistema_molino.requests.SuplySearchRequest;
 import com.molinosystem.sistema_molino.services.SuplyService;
 
 import lombok.RequiredArgsConstructor;
@@ -39,6 +40,16 @@ public class SuplyController {
     public ResponseEntity<SuplyDto> getSuplyById(@PathVariable Long id) {
         return ResponseEntity.ok(suplyService.getSuplyById(id));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<SuplyDto>> searchSuply(
+        @RequestParam(defaultValue = "0") int page, 
+        @RequestParam(defaultValue = "10") int pageSize,
+        @RequestBody SuplySearchRequest search
+    ) {
+        return ResponseEntity.ok(suplyService.searchSuplies(page, pageSize, search));
+    }
+    
 
     @PostMapping("")
     public ResponseEntity<SuplyDto> createSuply(@RequestBody SuplyRequest suplyRequest) {

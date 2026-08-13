@@ -5,11 +5,12 @@ import org.springframework.data.domain.Page;
 import com.molinosystem.sistema_molino.dtos.SuplyDto;
 import com.molinosystem.sistema_molino.entities.Suply;
 import com.molinosystem.sistema_molino.requests.SuplyRequest;
+import com.molinosystem.sistema_molino.requests.SuplySearchRequest;
 
 public interface ISuplyService {
     SuplyDto createSuply(SuplyRequest newSuplyRequest);
     Page<SuplyDto> getAllSuplies(int page, int pageSize);
-    Page<SuplyDto> searchSuplies(int page, int pageSize, String name);
+    Page<SuplyDto> searchSuplies(int page, int pageSize, SuplySearchRequest search);
     SuplyDto getSuplyById(Long id);
     Suply getSuplyEntityById(Long id);
     SuplyDto updateSuply(Long id, SuplyRequest upSuply);
