@@ -3,6 +3,7 @@ package com.molinosystem.sistema_molino.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.molinosystem.sistema_molino.dtos.AccountDto;
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
 import com.molinosystem.sistema_molino.dtos.ProductDto;
 import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
@@ -13,6 +14,7 @@ import com.molinosystem.sistema_molino.dtos.SuplyDto;
 import com.molinosystem.sistema_molino.dtos.SuplyUsageDto;
 import com.molinosystem.sistema_molino.dtos.UnitDto;
 import com.molinosystem.sistema_molino.dtos.UserDto;
+import com.molinosystem.sistema_molino.entities.Account;
 import com.molinosystem.sistema_molino.entities.Product;
 import com.molinosystem.sistema_molino.entities.ProductCategory;
 import com.molinosystem.sistema_molino.entities.ProductPrice;
@@ -167,6 +169,18 @@ public class Mapper {
         .suplyId(s.getSuply().getId())
         .amount(s.getAmount())
         .dateTime(s.getDateTime())
+        .build();
+    }
+
+    public static AccountDto toDTO(Account a){
+        if(a == null) return null;
+
+        return AccountDto.builder()
+        .id(a.getId())
+        .name(a.getName())
+        .balance(a.getBalance())
+        .description(a.getDescription())
+        .active(a.getActive())
         .build();
     }
 
