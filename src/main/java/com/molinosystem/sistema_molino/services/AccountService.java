@@ -95,6 +95,19 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    public AccountDto enableAccount(Long id) {
+        Account account = accountRepository.findById(id).orElseThrow(
+            () -> new NoFoundException("Account does not exist")
+        );
+
+        if (account.getActive()) throw new BadRequestException("Account is alredy enable");
+
+        account.setActive(true);
+
+        return Mapper.toDTO(account);
+    }
+
+    @Override
     public AccountDto disableAccount(Long id) {
         Account account = accountRepository.findById(id).orElseThrow(
             () -> new NoFoundException("Account does not exist")

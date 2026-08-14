@@ -11,6 +11,7 @@ public interface IAccountService {
     Page<AccountDto> searchAccount (int page, int pageSize, String search, Boolean isActive);
     AccountDto createAccount (AccountRequest newAccountRequest);
     AccountDto updateAccount (Long id, AccountRequest upAccount);
+    AccountDto enableAccount (Long id);
     AccountDto disableAccount (Long id);
     AccountDto deleteAccount (Long id);
 }
