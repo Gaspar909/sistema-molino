@@ -1,7 +1,7 @@
 package com.molinosystem.sistema_molino.entities;
 
 import java.math.BigDecimal;
-import java.security.Timestamp;
+import java.sql.Timestamp;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
