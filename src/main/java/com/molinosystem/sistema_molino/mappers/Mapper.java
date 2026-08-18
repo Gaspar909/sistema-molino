@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.molinosystem.sistema_molino.dtos.AccountDto;
+import com.molinosystem.sistema_molino.dtos.AccountMovementDto;
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
 import com.molinosystem.sistema_molino.dtos.ProductDto;
 import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
@@ -15,6 +16,7 @@ import com.molinosystem.sistema_molino.dtos.SuplyUsageDto;
 import com.molinosystem.sistema_molino.dtos.UnitDto;
 import com.molinosystem.sistema_molino.dtos.UserDto;
 import com.molinosystem.sistema_molino.entities.Account;
+import com.molinosystem.sistema_molino.entities.AccountMovement;
 import com.molinosystem.sistema_molino.entities.Product;
 import com.molinosystem.sistema_molino.entities.ProductCategory;
 import com.molinosystem.sistema_molino.entities.ProductPrice;
@@ -181,6 +183,20 @@ public class Mapper {
         .balance(a.getBalance())
         .description(a.getDescription())
         .active(a.getActive())
+        .build();
+    }
+
+    public static AccountMovementDto toDTO(AccountMovement a){
+        if (a == null) return null;
+
+        return AccountMovementDto.builder()
+        .id(a.getId())
+        .accoutn_id(a.getAccount().getId())
+        .amount(a.getAmount())
+        .movementType(a.getMovementType())
+        .description(a.getDescription())
+        .createdAt(a.getCreatedAt())
+        .userName(a.getUser().getName())
         .build();
     }
 
