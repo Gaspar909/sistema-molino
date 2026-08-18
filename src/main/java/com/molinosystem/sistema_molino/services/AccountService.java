@@ -42,6 +42,15 @@ public class AccountService implements IAccountService {
     }
 
     @Override
+    public Account getAccountEntityById (Long id){
+        Account account = accountRepository.findById(id).orElseThrow(
+            () -> new NoFoundException("Account does not exist")
+        );
+
+        return account;
+    }
+
+    @Override
     public Page<AccountDto> searchAccount(int page, int pageSize, String search, Boolean isActive) {
         Specification<Account> specification = Specification.where((root, query, cb) -> cb.conjunction());
         
