@@ -3,7 +3,12 @@ package com.molinosystem.sistema_molino.entities;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+import com.molinosystem.sistema_molino.enums.MovementType;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -34,7 +39,9 @@ public class AccountMovement {
 
     private BigDecimal amount;
 
-    private String movementType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "movement_type", nullable = false, length = 20)
+    private MovementType movementType;
     
     private String description;
 
