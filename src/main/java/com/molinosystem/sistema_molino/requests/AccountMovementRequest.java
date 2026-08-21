@@ -3,6 +3,8 @@ package com.molinosystem.sistema_molino.requests;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+import com.molinosystem.sistema_molino.enums.MovementType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,7 +18,7 @@ import lombok.Setter;
 public class AccountMovementRequest {
     private Long accountId;
     private BigDecimal amount;
-    private String movementType;
+    private MovementType movementType;
     private String description;
     private Timestamp createdAt;
     private Long userId;
