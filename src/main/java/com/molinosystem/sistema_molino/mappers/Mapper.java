@@ -191,7 +191,8 @@ public class Mapper {
 
         return AccountMovementDto.builder()
         .id(a.getId())
-        .accoutn_id(a.getAccount().getId())
+        .accoutnId(a.getAccount().getId())
+        .accountName(a.getAccount().getName())
         .amount(a.getAmount())
         .movementType(a.getMovementType())
         .description(a.getDescription())
