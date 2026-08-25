@@ -6,9 +6,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.molinosystem.sistema_molino.dtos.AccountMovementDto;
 import com.molinosystem.sistema_molino.requests.AccountMovementRequest;
 import com.molinosystem.sistema_molino.requests.AccountMovementSearchRequest;
+import com.molinosystem.sistema_molino.requests.TransferAccountMovementRequest;
 import com.molinosystem.sistema_molino.services.AccountMovementService;
 
 import lombok.RequiredArgsConstructor;
+
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -48,8 +51,14 @@ public class AccountMovementController {
     
     @PostMapping("")
     public ResponseEntity<AccountMovementDto> createAccountMovement(@RequestBody AccountMovementRequest accountMovementRequest) {
-        return ResponseEntity.status(200).body(accountMovementService.createAccountMovement(accountMovementRequest));
+        return ResponseEntity.status(201).body(accountMovementService.createAccountMovement(accountMovementRequest));
     }
+
+    @PostMapping("/transfer")
+    public ResponseEntity<List<AccountMovementDto>> transferToAccount(@RequestBody TransferAccountMovementRequest request) {
+        return ResponseEntity.status(200).body(accountMovementService.transferBetweenAccounts(request));
+    }
+    
     
     @DeleteMapping("/{id}")
     public ResponseEntity<AccountMovementDto> deleteAccountMovement(@PathVariable Long id){

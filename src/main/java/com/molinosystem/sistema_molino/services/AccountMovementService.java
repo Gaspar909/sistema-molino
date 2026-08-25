@@ -3,6 +3,8 @@ package com.molinosystem.sistema_molino.services;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -17,6 +19,7 @@ import com.molinosystem.sistema_molino.dtos.AccountMovementDto;
 import com.molinosystem.sistema_molino.entities.Account;
 import com.molinosystem.sistema_molino.entities.AccountMovement;
 import com.molinosystem.sistema_molino.entities.User;
+import com.molinosystem.sistema_molino.enums.MovementType;
 import com.molinosystem.sistema_molino.exceptions.BadRequestException;
 import com.molinosystem.sistema_molino.exceptions.NoFoundException;
 import com.molinosystem.sistema_molino.mappers.Mapper;
@@ -24,6 +27,7 @@ import com.molinosystem.sistema_molino.repositories.AccountMovementRepository;
 import com.molinosystem.sistema_molino.repositories.UserRepository;
 import com.molinosystem.sistema_molino.requests.AccountMovementRequest;
 import com.molinosystem.sistema_molino.requests.AccountMovementSearchRequest;
+import com.molinosystem.sistema_molino.requests.TransferAccountMovementRequest;
 
 import lombok.RequiredArgsConstructor;
 
@@ -123,6 +127,67 @@ public class AccountMovementService implements IAccountMovementService  {
         Page<AccountMovement> result = accountMovementRepository.findAll(specification, pageable);
 
         return result.map(Mapper::toDTO);
+    }
+
+    @Override
+    @Transactional
+    public List<AccountMovementDto> transferBetweenAccounts(TransferAccountMovementRequest request){
+        if(request == null) 
+            throw new BadRequestException("Invalid request");
+
+        if (request.getAmount() == null || request.getAmount().compareTo(BigDecimal.ZERO) <= 0) 
+        throw new BadRequestException("The transfer amount must be greater than zero");
+
+        if (request.getSourceAccountId().equals(request.getDestinationAccountId())) 
+        throw new BadRequestException("Source and destination accounts cannot be the same");
+
+        Account sourceAccount = accountService.getAccountEntityById(request.getSourceAccountId());
+        Account destinationAccount = accountService.getAccountEntityById(request.getDestinationAccountId());
+
+        if (sourceAccount.getBalance().compareTo(request.getAmount()) < 0) 
+        throw new BadRequestException("Insufficient funds in account: " + sourceAccount.getName());
+
+        sourceAccount.setBalance(sourceAccount.getBalance().subtract(request.getAmount()));
+        destinationAccount.setBalance(destinationAccount.getBalance().add(request.getAmount()));
+        
+        User user = getCurrentUser();
+
+        String extraNote = (request.getDescription() != null && !request.getDescription().trim().isEmpty())  
+            ? " (" + request.getDescription().trim()  + ").": "";
+        
+        String descriptionSource = "Transfer to account " + destinationAccount.getName() + extraNote;
+        String descriptionDestination = "Transfer from account " + sourceAccount.getName() + extraNote;
+
+        Timestamp createdAt = Timestamp.valueOf(LocalDateTime.now());
+
+        AccountMovement accountOutMovement = AccountMovement.builder()
+        .account(sourceAccount)
+        .amount(request.getAmount())
+        .movementType(MovementType.TRANSFER_OUT)
+        .description(descriptionSource)
+        .createdAt(createdAt)
+        .user(user)
+        .build();
+
+        AccountMovement accountInMovement = AccountMovement.builder()
+        .account(destinationAccount)
+        .amount(request.getAmount())
+        .movementType(MovementType.TRANSFER_IN)
+        .description(descriptionDestination)
+        .createdAt(createdAt)
+        .user(user)
+        .build();
+
+        List<AccountMovementDto> result = new ArrayList<>();
+
+        result.add(
+            Mapper.toDTO(accountMovementRepository.save(accountOutMovement))
+        );
+        result.add(
+            Mapper.toDTO(accountMovementRepository.save(accountInMovement))
+        );
+
+        return result;
     }
 
     @Override
