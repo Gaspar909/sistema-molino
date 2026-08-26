@@ -31,11 +31,11 @@ public class AccountMovementController {
 
     private final AccountMovementService accountMovementService;
 
-    @GetMapping("")
+    @GetMapping("/{accountId}")
     public ResponseEntity<Page<AccountMovementDto>> getAllAccountMovement(
         @RequestParam(defaultValue = "0") int page, 
         @RequestParam(defaultValue = "10") int pageSize,
-        @RequestParam(required = true) Long accountId
+        @PathVariable Long accountId
     ) {
         return ResponseEntity.ok(accountMovementService.getAllAccountMovement(page, pageSize, accountId));
     }
