@@ -125,6 +125,8 @@ public class Mapper {
         .clientName(s.getClient() != null ? s.getClient().getName() : null)
         .userId(s.getUser() != null ? s.getUser().getId() : null)
         .userName(s.getUser() != null ? s.getUser().getUserName() : null )
+        .accountId(s.getAccount() != null ? s.getAccount().getId() : null)
+        .accountName(s.getAccount() != null  ? s.getAccount().getName() : null)
         .build();
     }
 
@@ -146,6 +148,8 @@ public class Mapper {
         .clientName(s.getClient() != null ? s.getClient().getName() : null)
         .userId(s.getUser() != null ? s.getUser().getId() : null)
         .userName(s.getUser() != null ? s.getUser().getName() : null)
+        .accountId(s.getAccount() != null ? s.getAccount().getId() : null)
+        .accountName(s.getAccount() != null  ? s.getAccount().getName() : null)
         .saleDetail(details)
         .build();
     }

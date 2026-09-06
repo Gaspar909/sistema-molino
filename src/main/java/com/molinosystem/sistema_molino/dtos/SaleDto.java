@@ -22,4 +22,6 @@ public class SaleDto {
     private String clientName;
     private Long userId;
     private String userName;
+    private Long accountId;
+    private String accountName;
 }
