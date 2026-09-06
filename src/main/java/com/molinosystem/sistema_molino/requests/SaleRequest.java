@@ -17,4 +17,5 @@ public class SaleRequest {
 
     private List<SaleDetailRequest> saleDetail;
 
+    private Long accountId;
 }
