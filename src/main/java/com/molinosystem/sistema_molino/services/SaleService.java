@@ -178,30 +178,55 @@ public class SaleService implements ISaleService {
         Sale sale = saleRepository.findById(id)
         .orElseThrow( () -> new NoFoundException("Sale does not exist"));
 
-        sale.getDetails().clear();
-
         BigDecimal oldTotal = sale.getTotal();
-        BigDecimal total = BigDecimal.ZERO;
+        BigDecimal total = oldTotal;
 
-        for (SaleDetailRequest sd : saleUp.getSaleDetail()){
-            if (sd != null){
-                BigDecimal price = preoductPriceService.getProductPriceById(sd.getPriceId()).getPrice();
-                BigDecimal totalPrice = price.multiply(sd.getQuantity());
-                
-                SaleDetail newDetail = SaleDetail.builder()
-                .id(null)
-                .sale(null)
-                .product(productService.getProductEntityById(sd.getProductId()))
-                .quantity(sd.getQuantity())
-                .price(price)
-                .totalPrice(totalPrice)
-                .build();
-                
-                sale.addDetail(newDetail);
-                
-                total = total.add(newDetail.getTotalPrice());
+        if (saleUp.getSaleDetail() != null) {
+            for(SaleDetail sd : sale.getDetails()) {
+                Product tmpProduct = sd.getProduct();
+                double restoreStock = BigDecimal.valueOf(tmpProduct.getStock())
+                    .add(sd.getQuantity())
+                    .doubleValue();
+
+                tmpProduct.setStock(restoreStock);
+            }
+
+            sale.getDetails().clear();
+            total = BigDecimal.ZERO;
+
+            for (SaleDetailRequest sd : saleUp.getSaleDetail()){
+                if (sd != null){
+                    BigDecimal price = preoductPriceService.getProductPriceById(sd.getPriceId()).getPrice();
+                    BigDecimal totalPrice = price.multiply(sd.getQuantity());
+                    Product product = productService.getProductEntityById(sd.getProductId());
+                    if (sd.getQuantity().compareTo(BigDecimal.valueOf(product.getStock())) > 0) 
+                        throw new BadRequestException(
+                            "Insufficient stock for " + product.getName() + ": available " 
+                            + product.getStock() + ", requested " + sd.getQuantity()
+                        );
+                    
+                    SaleDetail newDetail = SaleDetail.builder()
+                    .id(null)
+                    .sale(sale)
+                    .product(product)
+                    .quantity(sd.getQuantity())
+                    .price(price)
+                    .totalPrice(totalPrice)
+                    .build();
+                    
+                    sale.addDetail(newDetail);
+
+                    double newStock = BigDecimal.valueOf(product.getStock())
+                        .subtract(sd.getQuantity())
+                        .doubleValue();
+
+                    product.setStock(newStock);
+                    
+                    total = total.add(newDetail.getTotalPrice());
+                }
             }
         }
+
 
         BigDecimal diff = total.subtract(oldTotal);
 
