@@ -1,9 +1,8 @@
 package com.molinosystem.sistema_molino.requests;
 
-import java.util.List;
+import java.math.BigDecimal;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,11 +10,9 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter @Getter
-@Builder
-public class SaleRequest {
-    private Long clientId;
-
-    private List<SaleDetailRequest> saleDetail;
-
-    private Long accountId;
+public class TransferAccountMovementRequest {
+    private Long sourceAccountId;
+    private Long destinationAccountId;
+    private BigDecimal amount;
+    private String description;
 }

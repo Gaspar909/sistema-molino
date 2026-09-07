@@ -3,6 +3,8 @@ package com.molinosystem.sistema_molino.mappers;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.molinosystem.sistema_molino.dtos.AccountDto;
+import com.molinosystem.sistema_molino.dtos.AccountMovementDto;
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
 import com.molinosystem.sistema_molino.dtos.ProductDto;
 import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
@@ -13,6 +15,8 @@ import com.molinosystem.sistema_molino.dtos.SuplyDto;
 import com.molinosystem.sistema_molino.dtos.SuplyUsageDto;
 import com.molinosystem.sistema_molino.dtos.UnitDto;
 import com.molinosystem.sistema_molino.dtos.UserDto;
+import com.molinosystem.sistema_molino.entities.Account;
+import com.molinosystem.sistema_molino.entities.AccountMovement;
 import com.molinosystem.sistema_molino.entities.Product;
 import com.molinosystem.sistema_molino.entities.ProductCategory;
 import com.molinosystem.sistema_molino.entities.ProductPrice;
@@ -121,6 +125,8 @@ public class Mapper {
         .clientName(s.getClient() != null ? s.getClient().getName() : null)
         .userId(s.getUser() != null ? s.getUser().getId() : null)
         .userName(s.getUser() != null ? s.getUser().getUserName() : null )
+        .accountId(s.getAccount() != null ? s.getAccount().getId() : null)
+        .accountName(s.getAccount() != null  ? s.getAccount().getName() : null)
         .build();
     }
 
@@ -142,6 +148,8 @@ public class Mapper {
         .clientName(s.getClient() != null ? s.getClient().getName() : null)
         .userId(s.getUser() != null ? s.getUser().getId() : null)
         .userName(s.getUser() != null ? s.getUser().getName() : null)
+        .accountId(s.getAccount() != null ? s.getAccount().getId() : null)
+        .accountName(s.getAccount() != null  ? s.getAccount().getName() : null)
         .saleDetail(details)
         .build();
     }
@@ -167,6 +175,33 @@ public class Mapper {
         .suplyId(s.getSuply().getId())
         .amount(s.getAmount())
         .dateTime(s.getDateTime())
+        .build();
+    }
+
+    public static AccountDto toDTO(Account a){
+        if(a == null) return null;
+
+        return AccountDto.builder()
+        .id(a.getId())
+        .name(a.getName())
+        .balance(a.getBalance())
+        .description(a.getDescription())
+        .active(a.getActive())
+        .build();
+    }
+
+    public static AccountMovementDto toDTO(AccountMovement a){
+        if (a == null) return null;
+
+        return AccountMovementDto.builder()
+        .id(a.getId())
+        .accoutnId(a.getAccount().getId())
+        .accountName(a.getAccount().getName())
+        .amount(a.getAmount())
+        .movementType(a.getMovementType())
+        .description(a.getDescription())
+        .createdAt(a.getCreatedAt())
+        .userName(a.getUser().getName())
         .build();
     }
 

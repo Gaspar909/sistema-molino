@@ -16,15 +16,18 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.molinosystem.sistema_molino.dtos.SaleCompleteDto;
 import com.molinosystem.sistema_molino.dtos.SaleDto;
+import com.molinosystem.sistema_molino.entities.Account;
 import com.molinosystem.sistema_molino.entities.Product;
 import com.molinosystem.sistema_molino.entities.Sale;
 import com.molinosystem.sistema_molino.entities.SaleDetail;
 import com.molinosystem.sistema_molino.entities.User;
+import com.molinosystem.sistema_molino.enums.MovementType;
 import com.molinosystem.sistema_molino.exceptions.BadRequestException;
 import com.molinosystem.sistema_molino.exceptions.NoFoundException;
 import com.molinosystem.sistema_molino.mappers.Mapper;
 import com.molinosystem.sistema_molino.repositories.SaleRepository;
 import com.molinosystem.sistema_molino.repositories.UserRepository;
+import com.molinosystem.sistema_molino.requests.AccountMovementRequest;
 import com.molinosystem.sistema_molino.requests.SaleDetailRequest;
 import com.molinosystem.sistema_molino.requests.SaleRequest;
 import com.molinosystem.sistema_molino.requests.SaleSearchRequest;
@@ -39,17 +42,21 @@ public class SaleService implements ISaleService {
 
     private final ProductService productService;
     private final ProductPriceService preoductPriceService;
+    private final AccountMovementService accountMovementService;
+    private final AccountService accountService;
 
     @Override
     @Transactional
     public SaleDto createSale(SaleRequest saleRequest) {
         BigDecimal total = BigDecimal.ZERO;
+        Account account = accountService.getAccountEntityById(saleRequest.getAccountId());
 
         Sale newSale = Sale.builder()
         .id(null)
         .folio(generateFolio())
         .total(total)
         .client(saleRequest.getClientId() != null ? null : null)
+        .account(account)
         .user(getCurrentUser())
         .build();
         
@@ -87,6 +94,17 @@ public class SaleService implements ISaleService {
         }
 
         newSale.setTotal(total);
+
+        AccountMovementRequest movementRequest = AccountMovementRequest.builder()
+        .accountId(saleRequest.getAccountId())
+        .amount(total)
+        .movementType(MovementType.INCOME)
+        .description("Sale: " + newSale.getFolio())
+        .createdAt(null)
+        .userId(null)
+        .build();
+
+        accountMovementService.createAccountMovement(movementRequest);
 
         return Mapper.toDTO(saleRepository.save(newSale));
     }
@@ -162,6 +180,7 @@ public class SaleService implements ISaleService {
 
         sale.getDetails().clear();
 
+        BigDecimal oldTotal = sale.getTotal();
         BigDecimal total = BigDecimal.ZERO;
 
         for (SaleDetailRequest sd : saleUp.getSaleDetail()){
@@ -182,6 +201,21 @@ public class SaleService implements ISaleService {
                 
                 total = total.add(newDetail.getTotalPrice());
             }
+        }
+
+        BigDecimal diff = total.subtract(oldTotal);
+
+        if (diff.compareTo(BigDecimal.ZERO) != 0) {
+        AccountMovementRequest movementRequest = AccountMovementRequest.builder()
+        .accountId(sale.getAccount().getId())
+        .amount(diff.abs())
+        .movementType(diff.compareTo(BigDecimal.ZERO) > 0 ? MovementType.INCOME : MovementType.EXPENSE)
+        .description("Update Sale: " + sale.getFolio())
+        .createdAt(null)
+        .userId(null)
+        .build();
+
+        accountMovementService.createAccountMovement(movementRequest);
         }
 
         sale.setTotal(total);
@@ -207,6 +241,17 @@ public class SaleService implements ISaleService {
                 }
             }
         }
+
+        AccountMovementRequest movementRequest = AccountMovementRequest.builder()
+        .accountId(sale.getAccount().getId())
+        .amount(sale.getTotal())
+        .movementType(MovementType.INCOME)
+        .description("Delete Sale: " + sale.getFolio())
+        .createdAt(null)
+        .userId(null)
+        .build();
+
+        accountMovementService.createAccountMovement(movementRequest);
         
         saleRepository.delete(sale);
 

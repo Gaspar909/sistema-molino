@@ -3,25 +3,25 @@ package com.molinosystem.sistema_molino.dtos;
 import java.math.BigDecimal;
 import java.sql.Timestamp;
 
+import com.molinosystem.sistema_molino.enums.MovementType;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+@AllArgsConstructor 
 @NoArgsConstructor
-@AllArgsConstructor
 @Setter @Getter
 @Builder
-public class SaleDto {
+public class AccountMovementDto {
     private Long id;
-    private String folio;
-    private Timestamp dateTime;
-    private BigDecimal total;
-    private Long clientId;
-    private String clientName;
-    private Long userId;
-    private String userName;
-    private Long accountId;
+    private Long accoutnId;
     private String accountName;
+    private BigDecimal amount;
+    private MovementType movementType;
+    private String description;
+    private Timestamp createdAt;
+    private String userName;
 }

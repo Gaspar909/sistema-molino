@@ -1,21 +1,19 @@
 package com.molinosystem.sistema_molino.requests;
 
-import java.util.List;
+import java.sql.Timestamp;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 @Setter @Getter
-@Builder
-public class SaleRequest {
-    private Long clientId;
-
-    private List<SaleDetailRequest> saleDetail;
-
+public class AccountMovementSearchRequest {
     private Long accountId;
+    private String search;
+    private Timestamp startDate;
+    private Timestamp endDate;
+    private Long userId;
 }
