@@ -1,5 +1,7 @@
 package com.molinosystem.sistema_molino.services;
 
+import java.math.BigDecimal;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -47,7 +49,8 @@ public class ProductService implements IProductService {
         .barCode(productRequest.getBarcode())
         .name(productRequest.getName())
         .description(productRequest.getDescripotion())
-        .stock( productRequest.getStock() != null || productRequest.getStock() < 0 ? productRequest.getStock() : 0 )
+        .stock( productRequest.getStock() != null || productRequest.getStock().compareTo(BigDecimal.ZERO) < 0 ? 
+            productRequest.getStock() : BigDecimal.ZERO)
         .unit(Mapper.toEntity(unitTmp))
         .category(Mapper.toEntity(productCategoryTmp))
         .active(true)

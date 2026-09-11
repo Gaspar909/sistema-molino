@@ -18,6 +18,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder 
 public class Suply extends Item{
-    private BigDecimal stock;
     private BigDecimal price;
 }

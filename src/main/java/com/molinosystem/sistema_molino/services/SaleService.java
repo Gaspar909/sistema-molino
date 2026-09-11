@@ -65,7 +65,7 @@ public class SaleService implements ISaleService {
                 BigDecimal price = preoductPriceService.getProductPriceById(sd.getPriceId()).getPrice();
 
                 Product product = productService.getProductEntityById(sd.getProductId());
-                if (sd.getQuantity().compareTo(BigDecimal.valueOf(product.getStock())) > 0) 
+                if (sd.getQuantity().compareTo(product.getStock()) > 0) 
                     throw new BadRequestException(
                         "Insufficient stock for " + product.getName() + ": available " 
                         + product.getStock() + ", requested " + sd.getQuantity()
@@ -81,12 +81,8 @@ public class SaleService implements ISaleService {
                 .build();
 
                 newSale.addDetail(newDetail);
-                
-                double newStock = BigDecimal.valueOf(product.getStock())
-                    .subtract(sd.getQuantity())
-                    .doubleValue();
 
-                product.setStock(newStock);
+                product.setStock(product.getStock().subtract(sd.getQuantity()));
                 //productService.updateProduct(product); <- NO HACE FALTA: @Transactional lo guarda automaticamente
 
                 total = total.add(newDetail.getTotalPrice());
@@ -184,9 +180,8 @@ public class SaleService implements ISaleService {
         if (saleUp.getSaleDetail() != null) {
             for(SaleDetail sd : sale.getDetails()) {
                 Product tmpProduct = sd.getProduct();
-                double restoreStock = BigDecimal.valueOf(tmpProduct.getStock())
-                    .add(sd.getQuantity())
-                    .doubleValue();
+
+                BigDecimal restoreStock = tmpProduct.getStock().add(sd.getQuantity());
 
                 tmpProduct.setStock(restoreStock);
             }
@@ -199,7 +194,7 @@ public class SaleService implements ISaleService {
                     BigDecimal price = preoductPriceService.getProductPriceById(sd.getPriceId()).getPrice();
                     BigDecimal totalPrice = price.multiply(sd.getQuantity());
                     Product product = productService.getProductEntityById(sd.getProductId());
-                    if (sd.getQuantity().compareTo(BigDecimal.valueOf(product.getStock())) > 0) 
+                    if (sd.getQuantity().compareTo(product.getStock()) > 0) 
                         throw new BadRequestException(
                             "Insufficient stock for " + product.getName() + ": available " 
                             + product.getStock() + ", requested " + sd.getQuantity()
@@ -216,11 +211,7 @@ public class SaleService implements ISaleService {
                     
                     sale.addDetail(newDetail);
 
-                    double newStock = BigDecimal.valueOf(product.getStock())
-                        .subtract(sd.getQuantity())
-                        .doubleValue();
-
-                    product.setStock(newStock);
+                    product.setStock(product.getStock().subtract(sd.getQuantity()));
                     
                     total = total.add(newDetail.getTotalPrice());
                 }
@@ -258,11 +249,8 @@ public class SaleService implements ISaleService {
             for(SaleDetail saleDetail : sale.getDetails()){
                 if (saleDetail != null) {
                     Product product = saleDetail.getProduct();
-                    double restoreStock = BigDecimal.valueOf(product.getStock())
-                    .add(saleDetail.getQuantity())
-                    .doubleValue();
 
-                    product.setStock(restoreStock);
+                    product.setStock(product.getStock().add(saleDetail.getQuantity()));
                 }
             }
         }
