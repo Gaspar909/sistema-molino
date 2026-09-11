@@ -8,6 +8,9 @@ import com.molinosystem.sistema_molino.dtos.AccountMovementDto;
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
 import com.molinosystem.sistema_molino.dtos.ProductDto;
 import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
+import com.molinosystem.sistema_molino.dtos.PurchaseCompleteDto;
+import com.molinosystem.sistema_molino.dtos.PurchaseDetailsDto;
+import com.molinosystem.sistema_molino.dtos.PurchaseDto;
 import com.molinosystem.sistema_molino.dtos.SaleCompleteDto;
 import com.molinosystem.sistema_molino.dtos.SaleDetailDto;
 import com.molinosystem.sistema_molino.dtos.SaleDto;
@@ -20,6 +23,8 @@ import com.molinosystem.sistema_molino.entities.AccountMovement;
 import com.molinosystem.sistema_molino.entities.Product;
 import com.molinosystem.sistema_molino.entities.ProductCategory;
 import com.molinosystem.sistema_molino.entities.ProductPrice;
+import com.molinosystem.sistema_molino.entities.Purchase;
+import com.molinosystem.sistema_molino.entities.PurchaseDetails;
 import com.molinosystem.sistema_molino.entities.Sale;
 import com.molinosystem.sistema_molino.entities.SaleDetail;
 import com.molinosystem.sistema_molino.entities.Suply;
@@ -203,6 +208,56 @@ public class Mapper {
         .createdAt(a.getCreatedAt())
         .userName(a.getUser().getName())
         .build();
+    }
+
+    public static PurchaseDto toDTO(Purchase p){
+        if (p == null) return null;
+
+        return PurchaseDto.builder()
+            .id(p.getId())
+            .dateTime(p.getDateTime())
+            .description(p.getDescription())
+            .total(p.getTotal())
+            .accountId(p.getAccount().getId())
+            .accountName(p.getAccount().getName())
+            .userName(p.getUser().getName())
+            .build();
+    }
+
+    public static PurchaseDetailsDto toDTO(PurchaseDetails p){
+        if (p== null) return null;
+
+        return PurchaseDetailsDto.builder()
+        .id(p.getId())
+        .type(p.getType())
+        .purchaseId(p.getPurchase().getId())
+        .referenceId(p.getReference().getId())
+        .referenceName(p.getReference().getName())
+        .quantity(p.getQuantity())
+        .unitPrice(p.getUnitPrice())
+        .subtotal(p.getSubTotal())
+        .build();
+    }
+    
+    public static PurchaseCompleteDto toCompleteDto(Purchase p){
+        if (p == null) return null;
+
+        List<PurchaseDetailsDto> details = null;
+        if (p.getDetails() != null) {
+            details = p.getDetails().stream().map(Mapper::toDTO)
+            .collect(Collectors.toList());
+        }
+
+        return PurchaseCompleteDto.builder()
+            .id(p.getId())
+            .dateTime(p.getDateTime())
+            .description(p.getDescription())
+            .total(p.getTotal())
+            .accountId(p.getAccount().getId())
+            .accountName(p.getAccount().getName())
+            .userName(p.getUser().getName())
+            .details(details)
+            .build();
     }
 
     public static User toEntitty(UserDto u){
