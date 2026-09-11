@@ -12,7 +12,7 @@ ALTER TABLE purchases
 -- 2. Modificaciones en la tabla purchase_datails
 -- Asegurar que purchase_id no sea nulo
 ALTER TABLE purchase_datails 
-    ALTER COLUMN purchase_id SET NOT NULL;
+    CHANGE purchase_id purchase_id  BIGINT NOT NULL;
 
 -- 3. Modificar reference_id para que sea la FK hacia la tabla 'items'
 ALTER TABLE purchase_datails
