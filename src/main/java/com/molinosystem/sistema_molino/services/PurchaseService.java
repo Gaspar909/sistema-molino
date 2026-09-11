@@ -65,9 +65,7 @@ public class PurchaseService implements IPurchaseService{
                 switch (pd.getType()) {
                     case PRODUCT:
                         Product product = productService.getProductEntityById(pd.getReferenceId());
-                        product.setStock(
-                            BigDecimal.valueOf(product.getStock()).add(pd.getQuantity()).doubleValue()
-                        );
+                        product.setStock(product.getStock().add(pd.getQuantity()));
                         itemTmp = product;
                         break;
 

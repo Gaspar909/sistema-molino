@@ -1,5 +1,7 @@
 package com.molinosystem.sistema_molino.requests;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -17,8 +19,7 @@ public class ProductRequest {
     
     private String descripotion;
     
-    private Double stock;
-
+    private BigDecimal stock;
     
     private Long unitId;
     

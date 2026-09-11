@@ -1,5 +1,7 @@
 package com.molinosystem.sistema_molino.dtos;
 
+import java.math.BigDecimal;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -15,7 +17,7 @@ public class ProductDto {
     private String barcode;
     private String name;
     private String description;
-    private Double stock;
+    private BigDecimal stock;
     private Boolean active;
     
     private Long unitId;
