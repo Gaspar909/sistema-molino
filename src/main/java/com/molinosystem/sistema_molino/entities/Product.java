@@ -25,8 +25,6 @@ public class Product extends  Item{
     @Column(name = "bar_code")
     private String barCode;
 
-    private Double stock;
-
     @ManyToOne
     @JoinColumn(name = "unitId", nullable = false)
     private Unit unit;

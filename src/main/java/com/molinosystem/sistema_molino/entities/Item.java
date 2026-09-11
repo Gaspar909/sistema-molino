@@ -1,5 +1,7 @@
 package com.molinosystem.sistema_molino.entities;
 
+import java.math.BigDecimal;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -25,7 +27,12 @@ public class Item {
     @Id 
     @GeneratedValue (strategy = GenerationType.IDENTITY)
     private Long id;
+    
     private String name;
+
     private String description;
+
+    private BigDecimal stock;
+
     private Boolean active;
 }
