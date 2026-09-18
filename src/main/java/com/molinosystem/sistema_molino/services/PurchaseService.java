@@ -21,7 +21,6 @@ import com.molinosystem.sistema_molino.enums.MovementType;
 import com.molinosystem.sistema_molino.exceptions.BadRequestException;
 import com.molinosystem.sistema_molino.exceptions.NoFoundException;
 import com.molinosystem.sistema_molino.mappers.Mapper;
-import com.molinosystem.sistema_molino.repositories.PurchaseDetailRepository;
 import com.molinosystem.sistema_molino.repositories.PurchaseRespository;
 import com.molinosystem.sistema_molino.repositories.UserRepository;
 import com.molinosystem.sistema_molino.requests.AccountMovementRequest;
@@ -33,14 +32,13 @@ import lombok.RequiredArgsConstructor;
 @Service 
 @RequiredArgsConstructor 
 public class PurchaseService implements IPurchaseService{
-    PurchaseRespository purchaseRepository;
-    PurchaseDetailRepository purchaseDetailRepository;
-    UserRepository userRepository;
+    private final PurchaseRespository purchaseRepository;
+    private final UserRepository userRepository;
 
-    ProductService productService;
-    SuplyService suplyService;
-    AccountService accountService;
-    AccountMovementService accountMovementService;
+    private final ProductService productService;
+    private final SuplyService suplyService;
+    private final AccountService accountService;
+    private final AccountMovementService accountMovementService;
 
     @Override
     @Transactional 
@@ -139,7 +137,7 @@ public class PurchaseService implements IPurchaseService{
             purchase.setDescription(purchaseUp.getDescription());
         }
 
-        if (purchase.getDetails() != null) {
+        if (purchaseUp.getDetails() != null) {
             for(PurchaseDetails pd : purchase.getDetails()){
                 Item item = pd.getReference();
 

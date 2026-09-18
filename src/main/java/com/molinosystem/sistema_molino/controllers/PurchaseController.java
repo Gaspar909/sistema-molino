@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 @RequestMapping ("/api/purchase")
 @RequiredArgsConstructor 
 public class PurchaseController {
-    PurchaseService purchaseService;
+    private final PurchaseService purchaseService;
 
     @GetMapping("")
     public ResponseEntity<Page<PurchaseDto>> getAllPurchases(
