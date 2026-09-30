@@ -5,6 +5,7 @@ import java.util.stream.Collectors;
 
 import com.molinosystem.sistema_molino.dtos.AccountDto;
 import com.molinosystem.sistema_molino.dtos.AccountMovementDto;
+import com.molinosystem.sistema_molino.dtos.ExpenseCategoryDto;
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
 import com.molinosystem.sistema_molino.dtos.ProductDto;
 import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
@@ -20,6 +21,7 @@ import com.molinosystem.sistema_molino.dtos.UnitDto;
 import com.molinosystem.sistema_molino.dtos.UserDto;
 import com.molinosystem.sistema_molino.entities.Account;
 import com.molinosystem.sistema_molino.entities.AccountMovement;
+import com.molinosystem.sistema_molino.entities.CategoryExpense;
 import com.molinosystem.sistema_molino.entities.Product;
 import com.molinosystem.sistema_molino.entities.ProductCategory;
 import com.molinosystem.sistema_molino.entities.ProductPrice;
@@ -258,6 +260,16 @@ public class Mapper {
             .userName(p.getUser().getName())
             .details(details)
             .build();
+    }
+
+    public static ExpenseCategoryDto toDTO(CategoryExpense e){
+        if (e == null) return  null;
+
+        return ExpenseCategoryDto.builder()
+        .id(e.getId())
+        .name(e.getName())
+        .description(e.getDescription())
+        .build();
     }
 
     public static User toEntitty(UserDto u){
