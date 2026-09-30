@@ -6,16 +6,18 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Entity
-@Table(name = "categories_expense")
+@Table(name = "expense_categories")
 
 @Setter @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder 
 public class CategoryExpense {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -24,4 +26,6 @@ public class CategoryExpense {
     private String name;
     
     private String description;
+
+    private Boolean active;
 }
