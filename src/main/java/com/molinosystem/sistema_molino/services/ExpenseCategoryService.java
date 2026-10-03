@@ -109,6 +109,15 @@ public class ExpenseCategoryService implements IExpenseCategoryService {
         return Mapper.toDTO(expenseCategoryRepository.save(category));
     }
 
-    
+    @Override
+    public ExpenseCategoryDto deleteExpenseCategory(Long id) {
+        CategoryExpense category = expenseCategoryRepository.findById(id).orElseThrow(
+        () -> new NoFoundException("Category does not exist")
+        );
+
+        expenseCategoryRepository.delete(category);
+
+        return Mapper.toDTO(category);
+    }
 }
 

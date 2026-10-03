@@ -1,4 +1,4 @@
 ALTER TABLE categories_expense
-ADD active bit(1) DEFAULT NULL;
+ADD IF NOT EXISTS active bit(1) DEFAULT NULL;
 
-RENAME categories_expense TO expense_categories;
+RENAME TABLE categories_expense TO expense_categories;

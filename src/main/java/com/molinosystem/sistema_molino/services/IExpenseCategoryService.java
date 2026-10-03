@@ -20,4 +20,6 @@ public interface IExpenseCategoryService {
     ExpenseCategoryDto enableExpenseVCategory(Long id);
 
     ExpenseCategoryDto disableExpenseCategory (Long id);
+
+    ExpenseCategoryDto deleteExpenseCategory (Long id);
 }
