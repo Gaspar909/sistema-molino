@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import com.molinosystem.sistema_molino.dtos.AccountDto;
 import com.molinosystem.sistema_molino.dtos.AccountMovementDto;
 import com.molinosystem.sistema_molino.dtos.ExpenseCategoryDto;
+import com.molinosystem.sistema_molino.dtos.ExpenseDto;
 import com.molinosystem.sistema_molino.dtos.ProductCategoryDto;
 import com.molinosystem.sistema_molino.dtos.ProductDto;
 import com.molinosystem.sistema_molino.dtos.ProductPriceDto;
@@ -22,6 +23,7 @@ import com.molinosystem.sistema_molino.dtos.UserDto;
 import com.molinosystem.sistema_molino.entities.Account;
 import com.molinosystem.sistema_molino.entities.AccountMovement;
 import com.molinosystem.sistema_molino.entities.CategoryExpense;
+import com.molinosystem.sistema_molino.entities.Expense;
 import com.molinosystem.sistema_molino.entities.Product;
 import com.molinosystem.sistema_molino.entities.ProductCategory;
 import com.molinosystem.sistema_molino.entities.ProductPrice;
@@ -269,6 +271,21 @@ public class Mapper {
         .id(e.getId())
         .name(e.getName())
         .description(e.getDescription())
+        .build();
+    }
+
+    public static ExpenseDto toDTO(Expense e){
+        if (e == null) return null;
+
+        return ExpenseDto.builder()
+        .id(e.getId())
+        .date(e.getDate())
+        .categoryId(e.getAccount().getId())
+        .categoryName(e.getCategory().getName())
+        .description(e.getDescription())
+        .expenseTotal(e.getExpenseTotal())
+        .accountId(e.getAccount().getId())
+        .accountName(e.getAccount().getName())
         .build();
     }
 
