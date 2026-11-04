@@ -5,6 +5,7 @@ import java.math.BigDecimal;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,6 +20,7 @@ import com.molinosystem.sistema_molino.mappers.Mapper;
 import com.molinosystem.sistema_molino.repositories.ExpenseRepository;
 import com.molinosystem.sistema_molino.requests.AccountMovementRequest;
 import com.molinosystem.sistema_molino.requests.ExpenseRequest;
+import com.molinosystem.sistema_molino.requests.ExpenseSearchRequest;
 import com.molinosystem.sistema_molino.requests.TransferAccountMovementRequest;
 
 import lombok.RequiredArgsConstructor;
@@ -72,6 +74,41 @@ public class ExpenseService implements IExpenseService {
         accountMovementService.createAccountMovement(movementRequest);
 
         return Mapper.toDTO(expenseRepository.save(newExpense));
+    }
+
+    @Override 
+    public Page<ExpenseDto> serchExpense(int page, int pageSize, ExpenseSearchRequest search){
+        Specification<Expense> specification = Specification.where((root, query, cb) -> cb.conjunction());
+
+        if (search.getCategory() != null && search.getCategory() > 0) {
+            specification = specification.and( (root, query, cb) -> {
+                return cb.equal(root.get("category").get("id"), search.getCategory());
+            }
+        );
+        }
+
+        if (search.getStartDate() != null) {
+            specification = specification.and((root, query, cb) -> {
+                return  cb.greaterThanOrEqualTo(root.get("date"), search.getStartDate());
+            });
+        }
+
+        if (search.getEndDate() != null) {
+            specification = specification.and((root, query, cb) -> {
+                return  cb.lessThanOrEqualTo(root.get("date"), search.getStartDate());
+            });
+        }
+
+        if (search.getDescription() != null && !search.getDescription().trim().isEmpty()) {
+            specification = specification.and((root, query, cb) -> {
+                return cb.like(cb.lower(root.get("description")), search.getDescription().toLowerCase());
+            });
+        }
+        Pageable pageable = PageRequest.of(page, pageSize);
+
+        Page<Expense> result = expenseRepository.findAll(specification, pageable);
+
+        return result.map(Mapper::toDTO);
     }
 
     @Override
