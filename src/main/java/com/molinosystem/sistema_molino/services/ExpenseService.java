@@ -77,7 +77,7 @@ public class ExpenseService implements IExpenseService {
     }
 
     @Override 
-    public Page<ExpenseDto> serchExpense(int page, int pageSize, ExpenseSearchRequest search){
+    public Page<ExpenseDto> searchExpense(int page, int pageSize, ExpenseSearchRequest search){
         Specification<Expense> specification = Specification.where((root, query, cb) -> cb.conjunction());
 
         if (search.getCategory() != null && search.getCategory() > 0) {
@@ -95,13 +95,13 @@ public class ExpenseService implements IExpenseService {
 
         if (search.getEndDate() != null) {
             specification = specification.and((root, query, cb) -> {
-                return  cb.lessThanOrEqualTo(root.get("date"), search.getStartDate());
+                return  cb.lessThanOrEqualTo(root.get("date"), search.getEndDate());
             });
         }
 
         if (search.getDescription() != null && !search.getDescription().trim().isEmpty()) {
             specification = specification.and((root, query, cb) -> {
-                return cb.like(cb.lower(root.get("description")), search.getDescription().toLowerCase());
+                return cb.like(cb.lower(root.get("description")), "%"+ search.getDescription().toLowerCase() + "%");
             });
         }
         Pageable pageable = PageRequest.of(page, pageSize);

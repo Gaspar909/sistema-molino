@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.molinosystem.sistema_molino.dtos.ExpenseDto;
 import com.molinosystem.sistema_molino.requests.ExpenseRequest;
+import com.molinosystem.sistema_molino.requests.ExpenseSearchRequest;
 import com.molinosystem.sistema_molino.services.ExpenseService;
 
 import lombok.RequiredArgsConstructor;
@@ -31,7 +32,7 @@ public class ExpenseController {
     @GetMapping("")
     public ResponseEntity<Page<ExpenseDto>> getAllExpense (
         @RequestParam(defaultValue = "0") int page, 
-        @RequestParam (defaultValue = "10") int pageSize) {
+        @RequestParam(defaultValue = "10") int pageSize) {
         return ResponseEntity.ok(expenseService.getAllExpense(page, pageSize));
     }
     
@@ -39,6 +40,16 @@ public class ExpenseController {
     public ResponseEntity<ExpenseDto> getExpenseById(@PathVariable Long id) {
         return ResponseEntity.ok(expenseService.getExpseneById(id));
     }
+
+
+    @GetMapping("/search")
+    public ResponseEntity<Page<ExpenseDto>> searchExpenses(
+        @RequestParam(defaultValue = "0") int page,
+        @RequestParam(defaultValue = "10") int pageSize,
+        @RequestBody ExpenseSearchRequest search) {
+        return ResponseEntity.ok(expenseService.searchExpense(page, pageSize, search));
+    }
+    
 
     @PostMapping("")
     public ResponseEntity<ExpenseDto> createExpense(@RequestBody ExpenseRequest newExpense) {

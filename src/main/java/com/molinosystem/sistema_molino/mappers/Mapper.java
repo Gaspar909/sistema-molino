@@ -280,7 +280,7 @@ public class Mapper {
         return ExpenseDto.builder()
         .id(e.getId())
         .date(e.getDate())
-        .categoryId(e.getAccount().getId())
+        .categoryId(e.getCategory().getId())
         .categoryName(e.getCategory().getName())
         .description(e.getDescription())
         .expenseTotal(e.getExpenseTotal())
